@@ -1,0 +1,8 @@
+{
+  "dataset_name": "cleaned_data.csv",
+  "row_count": 7,
+  "column_count": 9,
+  "status": "pass",
+  "issues": [],
+  "passed_checks": true
+}

@@ -1,0 +1,58 @@
+{
+  "dataset_name": "sample_customer_data.csv",
+  "row_count": 8,
+  "column_count": 9,
+  "columns": [
+    "customer_id",
+    "name",
+    "email",
+    "age",
+    "city",
+    "signup_date",
+    "amount_spent",
+    "phone",
+    "notes"
+  ],
+  "column_types": {
+    "customer_id": "string",
+    "name": "string",
+    "email": "string",
+    "age": "string",
+    "city": "string",
+    "signup_date": "string",
+    "amount_spent": "numeric",
+    "phone": "string",
+    "notes": "string"
+  },
+  "missing_values": {
+    "customer_id": 0,
+    "name": 0,
+    "email": 0,
+    "age": 2,
+    "city": 1,
+    "signup_date": 0,
+    "amount_spent": 1,
+    "phone": 0,
+    "notes": 2
+  },
+  "duplicate_rows": 1,
+  "pii_columns": [
+    "name",
+    "email",
+    "phone"
+  ],
+  "summary": {
+    "null_percentage": 8.33,
+    "unique_values": {
+      "customer_id": 7,
+      "name": 7,
+      "email": 7,
+      "age": 6,
+      "city": 6,
+      "signup_date": 7,
+      "amount_spent": 6,
+      "phone": 7,
+      "notes": 5
+    }
+  }
+}

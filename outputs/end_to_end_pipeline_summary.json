@@ -1,0 +1,8 @@
+{
+  "input_file": "sample_customer_data.csv",
+  "cleaned_file": "cleaned_data.csv",
+  "profiling_status": "completed",
+  "validation_status": "pass",
+  "issues_found": [],
+  "pipeline_ready": true
+}
