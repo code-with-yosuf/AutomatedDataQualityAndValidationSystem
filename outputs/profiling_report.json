@@ -13,16 +13,38 @@
     "phone",
     "notes"
   ],
-  "column_types": {
-    "customer_id": "string",
-    "name": "string",
-    "email": "string",
-    "age": "string",
-    "city": "string",
-    "signup_date": "string",
-    "amount_spent": "numeric",
-    "phone": "string",
-    "notes": "string"
+  "metadata": {
+    "column_types": {
+      "customer_id": "string",
+      "name": "string",
+      "email": "string",
+      "age": "string",
+      "city": "string",
+      "signup_date": "string",
+      "amount_spent": "numeric",
+      "phone": "string",
+      "notes": "string"
+    },
+    "semantic_types": {
+      "customer_id": "identifier",
+      "name": "name",
+      "email": "email",
+      "age": "unknown",
+      "city": "unknown",
+      "signup_date": "date",
+      "amount_spent": "unknown",
+      "phone": "phone",
+      "notes": "unknown"
+    },
+    "mixed_type_columns": [
+      "age",
+      "signup_date"
+    ],
+    "pii_columns": [
+      "name",
+      "email",
+      "phone"
+    ]
   },
   "missing_values": {
     "customer_id": 0,
@@ -36,13 +58,14 @@
     "notes": 2
   },
   "duplicate_rows": 1,
-  "pii_columns": [
-    "name",
-    "email",
-    "phone"
-  ],
+  "quality_checks": {
+    "suspicious_columns": [
+      "age",
+      "signup_date"
+    ],
+    "null_percentage": 8.33
+  },
   "summary": {
-    "null_percentage": 8.33,
     "unique_values": {
       "customer_id": 7,
       "name": 7,
@@ -53,6 +76,11 @@
       "amount_spent": 6,
       "phone": 7,
       "notes": 5
+    },
+    "profiles": {
+      "total_nulls": 6,
+      "total_duplicates": 1,
+      "suspicious_columns_count": 2
     }
   }
 }

@@ -12,20 +12,22 @@ def clean_dataset(file_path: str | Path, profile: Dict[str, Any], output_dir: st
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    profile_column_types = profile.get("column_types") or profile.get("metadata", {}).get("column_types", {})
+
     for column in df.columns:
         if df[column].dtype == "object":
             df[column] = df[column].astype(str).str.strip()
         df[column] = df[column].replace({"nan": None, "NaN": None, "None": None, "": None})
 
     df = df.drop_duplicates()
-    numeric_columns = [col for col, dtype in profile["column_types"].items() if dtype == "numeric"]
+    numeric_columns = [col for col, dtype in profile_column_types.items() if dtype == "numeric"]
     for column in numeric_columns:
         df[column] = pd.to_numeric(df[column], errors="coerce")
 
     for column in df.columns:
         if df[column].dtype == "object":
             df[column] = df[column].replace({"None": None, "nan": None})
-        df[column] = df[column].fillna(method="ffill")
+        df[column] = df[column].ffill()
 
     cleaned_path = output_dir / "cleaned_data.csv"
     df.to_csv(cleaned_path, index=False)
