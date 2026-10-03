@@ -1,0 +1,153 @@
+{
+  "input_file": "sample_customer_data.csv",
+  "output_file": "cleaned_data.csv",
+  "schema_inference": {
+    "customer_id": {
+      "expected_type": "string",
+      "semantic_type": "identifier",
+      "expected_format": null,
+      "expected_range": null
+    },
+    "name": {
+      "expected_type": "string",
+      "semantic_type": "name",
+      "expected_format": null,
+      "expected_range": null
+    },
+    "email": {
+      "expected_type": "string",
+      "semantic_type": "email",
+      "expected_format": null,
+      "expected_range": null
+    },
+    "age": {
+      "expected_type": "numeric",
+      "semantic_type": "unknown",
+      "expected_format": null,
+      "expected_range": {
+        "min": 28.0,
+        "max": 57.0
+      }
+    },
+    "city": {
+      "expected_type": "string",
+      "semantic_type": "unknown",
+      "expected_format": null,
+      "expected_range": null
+    },
+    "signup_date": {
+      "expected_type": "datetime",
+      "semantic_type": "date",
+      "expected_format": "YYYY-MM-DD",
+      "expected_range": null
+    },
+    "amount_spent": {
+      "expected_type": "numeric",
+      "semantic_type": "unknown",
+      "expected_format": null,
+      "expected_range": {
+        "min": 88.1,
+        "max": 340.5
+      }
+    },
+    "phone": {
+      "expected_type": "string",
+      "semantic_type": "phone",
+      "expected_format": null,
+      "expected_range": null
+    },
+    "notes": {
+      "expected_type": "string",
+      "semantic_type": "unknown",
+      "expected_format": null,
+      "expected_range": null
+    }
+  },
+  "actions": {
+    "exact_duplicates_removed": 1,
+    "fuzzy_duplicate_candidates": [],
+    "fuzzy_candidate_policy": "reported_only; candidates are not removed automatically",
+    "normalization": {
+      "trimmed_or_standardized": {},
+      "date_formats": {
+        "signup_date": {
+          "normalized_format": "YYYY-MM-DD",
+          "invalid_values": 1
+        }
+      },
+      "case_normalized": [
+        "email"
+      ]
+    },
+    "numeric_imputations": {
+      "age": {
+        "count": 2,
+        "method": "median"
+      },
+      "amount_spent": {
+        "count": 1,
+        "method": "median"
+      }
+    },
+    "categorical_imputations": {
+      "city": {
+        "count": 1,
+        "method": "most_frequent",
+        "fallback": "Boston"
+      },
+      "signup_date": {
+        "count": 1,
+        "method": "most_frequent",
+        "fallback": "2024-01-05"
+      },
+      "notes": {
+        "count": 2,
+        "method": "most_frequent",
+        "fallback": "Active customer"
+      }
+    },
+    "missing_values_before_imputation": {
+      "customer_id": 0,
+      "name": 0,
+      "email": 0,
+      "age": 2,
+      "city": 1,
+      "signup_date": 1,
+      "amount_spent": 1,
+      "phone": 0,
+      "notes": 2
+    },
+    "textual_anomaly_counts_after_cleaning": {
+      "customer_id": 0,
+      "name": 0,
+      "email": 0,
+      "city": 0,
+      "signup_date": 0,
+      "phone": 0,
+      "notes": 0
+    }
+  },
+  "quality_score": {
+    "before": {
+      "overall": 87.92,
+      "dimensions": {
+        "completeness": 91.67,
+        "uniqueness": 87.5,
+        "type_consistency": 83.33
+      }
+    },
+    "after": {
+      "overall": 100.0,
+      "dimensions": {
+        "completeness": 100.0,
+        "uniqueness": 100.0,
+        "type_consistency": 100.0
+      }
+    },
+    "delta": 12.08
+  },
+  "transformations": {
+    "options": {},
+    "output_file": null
+  }
+}

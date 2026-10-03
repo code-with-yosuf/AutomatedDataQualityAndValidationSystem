@@ -143,7 +143,7 @@ def _column_profiles(df: pd.DataFrame, semantic_types: Dict[str, str]) -> Dict[s
             else:
                 profile["numeric_statistics"] = {}
         elif inferred_type == "datetime":
-            parsed_dates = pd.to_datetime(non_null, errors="coerce")
+            parsed_dates = pd.to_datetime(non_null, errors="coerce", format="mixed")
             profile["date_statistics"] = {
                 "min": parsed_dates.min().isoformat() if parsed_dates.notna().any() else None,
                 "max": parsed_dates.max().isoformat() if parsed_dates.notna().any() else None,
@@ -182,12 +182,12 @@ def _check_rules(
                 findings.append({"column": column, "rule": "invalid_email_format", "severity": "error", "count": invalid_count})
                 suspicious_columns.append(column)
         if semantic_types[column] == "date":
-            valid_dates = pd.to_datetime(df[column], errors="coerce")
+            valid_dates = pd.to_datetime(df[column], errors="coerce", format="mixed")
             invalid_count = int(valid_dates.isna().sum() - df[column].isna().sum())
             if invalid_count:
                 findings.append({"column": column, "rule": "invalid_date_format", "severity": "error", "count": invalid_count})
                 suspicious_columns.append(column)
-        if semantic_types[column] in {"numeric", "identifier"} and "numeric_statistics" in profile:
+        if profile["inferred_type"] == "numeric" and "numeric_statistics" in profile:
             stats = profile["numeric_statistics"]
             if stats.get("outlier_count_iqr", 0):
                 findings.append({"column": column, "rule": "numeric_outliers_iqr", "severity": "info", "count": stats["outlier_count_iqr"]})

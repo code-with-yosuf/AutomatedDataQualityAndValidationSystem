@@ -1,4 +1,5 @@
 {
+  "schema_version": "1.0",
   "dataset_name": "sample_customer_data.csv",
   "row_count": 8,
   "column_count": 9,
@@ -18,9 +19,9 @@
       "customer_id": "string",
       "name": "string",
       "email": "string",
-      "age": "string",
+      "age": "numeric",
       "city": "string",
-      "signup_date": "string",
+      "signup_date": "datetime",
       "amount_spent": "numeric",
       "phone": "string",
       "notes": "string"
@@ -46,6 +47,228 @@
       "phone"
     ]
   },
+  "column_profiles": {
+    "customer_id": {
+      "inferred_type": "string",
+      "semantic_type": "identifier",
+      "row_count": 8,
+      "missing_count": 0,
+      "missing_percentage": 0.0,
+      "unique_count": 7,
+      "cardinality_percentage": 87.5,
+      "type_counts": {
+        "string": 8
+      },
+      "inconsistent_value_count": 0,
+      "top_values": {
+        "C-1002": 2,
+        "C-1001": 1,
+        "C-1003": 1,
+        "C-1004": 1,
+        "C-1005": 1,
+        "C-1006": 1,
+        "C-1007": 1
+      }
+    },
+    "name": {
+      "inferred_type": "string",
+      "semantic_type": "name",
+      "row_count": 8,
+      "missing_count": 0,
+      "missing_percentage": 0.0,
+      "unique_count": 7,
+      "cardinality_percentage": 87.5,
+      "type_counts": {
+        "string": 8
+      },
+      "inconsistent_value_count": 0,
+      "top_values": {
+        "Bob Smith": 2,
+        "Alice Johnson": 1,
+        "Carol Davis": 1,
+        "David Lee": 1,
+        "Eve Brown": 1,
+        "Frank White": 1,
+        "Grace Green": 1
+      }
+    },
+    "email": {
+      "inferred_type": "string",
+      "semantic_type": "email",
+      "row_count": 8,
+      "missing_count": 0,
+      "missing_percentage": 0.0,
+      "unique_count": 7,
+      "cardinality_percentage": 87.5,
+      "type_counts": {
+        "string": 8
+      },
+      "inconsistent_value_count": 0,
+      "top_values": {
+        "bob@example.com": 2,
+        "alice@example.com": 1,
+        "carol@domain.net": 1,
+        "david@example.com": 1,
+        "eve@example.com": 1,
+        "frank@provider.com": 1,
+        "grace@example.com": 1
+      }
+    },
+    "age": {
+      "inferred_type": "numeric",
+      "semantic_type": "unknown",
+      "row_count": 8,
+      "missing_count": 2,
+      "missing_percentage": 25.0,
+      "unique_count": 6,
+      "cardinality_percentage": 100.0,
+      "type_counts": {
+        "numeric": 5,
+        "string": 1
+      },
+      "inconsistent_value_count": 1,
+      "top_values": {
+        "29": 1,
+        "41": 1,
+        "invalid": 1,
+        "36": 1,
+        "57": 1,
+        "28": 1
+      },
+      "numeric_statistics": {
+        "min": 28.0,
+        "max": 57.0,
+        "mean": 38.2,
+        "median": 36.0,
+        "std_dev": 11.77709641634983,
+        "q1": 29.0,
+        "q3": 41.0,
+        "outlier_count_iqr": 0
+      }
+    },
+    "city": {
+      "inferred_type": "string",
+      "semantic_type": "unknown",
+      "row_count": 8,
+      "missing_count": 1,
+      "missing_percentage": 12.5,
+      "unique_count": 6,
+      "cardinality_percentage": 85.71,
+      "type_counts": {
+        "string": 7
+      },
+      "inconsistent_value_count": 0,
+      "top_values": {
+        "Chicago": 2,
+        "New York": 1,
+        "Los Angeles": 1,
+        "Seattle": 1,
+        "Miami": 1,
+        "Boston": 1
+      }
+    },
+    "signup_date": {
+      "inferred_type": "datetime",
+      "semantic_type": "date",
+      "row_count": 8,
+      "missing_count": 0,
+      "missing_percentage": 0.0,
+      "unique_count": 7,
+      "cardinality_percentage": 87.5,
+      "type_counts": {
+        "datetime": 7,
+        "string": 1
+      },
+      "inconsistent_value_count": 1,
+      "top_values": {
+        "2024-02-13": 2,
+        "2024-01-05": 1,
+        "2024-03-21": 1,
+        "2024-05-10": 1,
+        "2024-06-18": 1,
+        "2024-07-12": 1,
+        "not-a-date": 1
+      },
+      "date_statistics": {
+        "min": "2024-01-05T00:00:00",
+        "max": "2024-07-12T00:00:00",
+        "invalid_count": 1
+      }
+    },
+    "amount_spent": {
+      "inferred_type": "numeric",
+      "semantic_type": "unknown",
+      "row_count": 8,
+      "missing_count": 1,
+      "missing_percentage": 12.5,
+      "unique_count": 6,
+      "cardinality_percentage": 85.71,
+      "type_counts": {
+        "numeric": 7
+      },
+      "inconsistent_value_count": 0,
+      "top_values": {
+        "220.0": 2,
+        "150.75": 1,
+        "340.5": 1,
+        "120.0": 1,
+        "90.25": 1,
+        "88.1": 1
+      },
+      "numeric_statistics": {
+        "min": 88.1,
+        "max": 340.5,
+        "mean": 175.65714285714284,
+        "median": 150.75,
+        "std_dev": 91.09012217108317,
+        "q1": 105.125,
+        "q3": 220.0,
+        "outlier_count_iqr": 0
+      }
+    },
+    "phone": {
+      "inferred_type": "string",
+      "semantic_type": "phone",
+      "row_count": 8,
+      "missing_count": 0,
+      "missing_percentage": 0.0,
+      "unique_count": 7,
+      "cardinality_percentage": 87.5,
+      "type_counts": {
+        "string": 8
+      },
+      "inconsistent_value_count": 0,
+      "top_values": {
+        "555-222-2222": 2,
+        "555-111-1111": 1,
+        "555-333-3333": 1,
+        "555-444-4444": 1,
+        "555-555-5555": 1,
+        "555-666-6666": 1,
+        "555-777-7777": 1
+      }
+    },
+    "notes": {
+      "inferred_type": "string",
+      "semantic_type": "unknown",
+      "row_count": 8,
+      "missing_count": 2,
+      "missing_percentage": 25.0,
+      "unique_count": 5,
+      "cardinality_percentage": 83.33,
+      "type_counts": {
+        "string": 6
+      },
+      "inconsistent_value_count": 0,
+      "top_values": {
+        "Needs follow-up": 2,
+        "Active customer": 1,
+        "VIP": 1,
+        "High value": 1,
+        "Verified": 1
+      }
+    }
+  },
   "missing_values": {
     "customer_id": 0,
     "name": 0,
@@ -58,15 +281,8 @@
     "notes": 2
   },
   "duplicate_rows": 1,
-  "quality_checks": {
-    "suspicious_columns": [
-      "age",
-      "signup_date"
-    ],
-    "null_percentage": 8.33
-  },
-  "summary": {
-    "unique_values": {
+  "profiling": {
+    "cardinality": {
       "customer_id": 7,
       "name": 7,
       "email": 7,
@@ -77,10 +293,131 @@
       "phone": 7,
       "notes": 5
     },
-    "profiles": {
-      "total_nulls": 6,
-      "total_duplicates": 1,
-      "suspicious_columns_count": 2
+    "distributions": {
+      "customer_id": {
+        "C-1002": 2,
+        "C-1001": 1,
+        "C-1003": 1,
+        "C-1004": 1,
+        "C-1005": 1,
+        "C-1006": 1,
+        "C-1007": 1
+      },
+      "name": {
+        "Bob Smith": 2,
+        "Alice Johnson": 1,
+        "Carol Davis": 1,
+        "David Lee": 1,
+        "Eve Brown": 1,
+        "Frank White": 1,
+        "Grace Green": 1
+      },
+      "email": {
+        "bob@example.com": 2,
+        "alice@example.com": 1,
+        "carol@domain.net": 1,
+        "david@example.com": 1,
+        "eve@example.com": 1,
+        "frank@provider.com": 1,
+        "grace@example.com": 1
+      },
+      "age": {
+        "29": 1,
+        "41": 1,
+        "invalid": 1,
+        "36": 1,
+        "57": 1,
+        "28": 1
+      },
+      "city": {
+        "Chicago": 2,
+        "New York": 1,
+        "Los Angeles": 1,
+        "Seattle": 1,
+        "Miami": 1,
+        "Boston": 1
+      },
+      "signup_date": {
+        "2024-02-13": 2,
+        "2024-01-05": 1,
+        "2024-03-21": 1,
+        "2024-05-10": 1,
+        "2024-06-18": 1,
+        "2024-07-12": 1,
+        "not-a-date": 1
+      },
+      "amount_spent": {
+        "220.0": 2,
+        "150.75": 1,
+        "340.5": 1,
+        "120.0": 1,
+        "90.25": 1,
+        "88.1": 1
+      },
+      "phone": {
+        "555-222-2222": 2,
+        "555-111-1111": 1,
+        "555-333-3333": 1,
+        "555-444-4444": 1,
+        "555-555-5555": 1,
+        "555-666-6666": 1,
+        "555-777-7777": 1
+      },
+      "notes": {
+        "Needs follow-up": 2,
+        "Active customer": 1,
+        "VIP": 1,
+        "High value": 1,
+        "Verified": 1
+      }
+    },
+    "correlation_matrix": {
+      "age": {
+        "age": 1.0,
+        "amount_spent": -0.451508
+      },
+      "amount_spent": {
+        "age": -0.451508,
+        "amount_spent": 1.0
+      }
     }
+  },
+  "quality_checks": {
+    "suspicious_columns": [
+      "age",
+      "signup_date"
+    ],
+    "findings": [
+      {
+        "column": "age",
+        "rule": "mixed_or_inconsistent_types",
+        "severity": "warning",
+        "count": 1
+      },
+      {
+        "column": "signup_date",
+        "rule": "mixed_or_inconsistent_types",
+        "severity": "warning",
+        "count": 1
+      },
+      {
+        "column": "signup_date",
+        "rule": "invalid_date_format",
+        "severity": "error",
+        "count": 1
+      }
+    ],
+    "null_percentage": 8.33
+  },
+  "visualizations": {
+    "missing_heatmap": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\profiling_visualizations\\missing_value_heatmap.png",
+    "outlier_distribution": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\profiling_visualizations\\outlier_distributions.png",
+    "correlation_heatmap": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\profiling_visualizations\\correlation_heatmap.png"
+  },
+  "summary": {
+    "total_nulls": 6,
+    "total_duplicates": 1,
+    "suspicious_columns_count": 2,
+    "pii_columns_count": 3
   }
 }

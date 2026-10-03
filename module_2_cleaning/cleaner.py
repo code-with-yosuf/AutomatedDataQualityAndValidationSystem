@@ -38,7 +38,7 @@ def _normalize_text(df: pd.DataFrame, semantic_types: Dict[str, str]) -> Tuple[p
                 text = text.str.lower()
                 changes["case_normalized"].append(column)
             elif semantic_type == "date" or "date" in str(column).lower() or "time" in str(column).lower():
-                parsed = pd.to_datetime(text, errors="coerce")
+                parsed = pd.to_datetime(text, errors="coerce", format="mixed")
                 invalid_count = int((text.notna() & parsed.isna()).sum())
                 text = parsed.dt.strftime("%Y-%m-%d").astype("string")
                 changes["date_formats"][column] = {"normalized_format": "YYYY-MM-DD", "invalid_values": invalid_count}
@@ -137,6 +137,9 @@ def _impute_numeric(df: pd.DataFrame, numeric_columns: List[str], strategy: str)
                 value = df[column].mean()
             elif method == "constant":
                 value = 0.0
+            elif method == "most_frequent":
+                modes = df[column].mode(dropna=True)
+                value = modes.iloc[0] if len(modes) else 0.0
             else:
                 value = df[column].median()
             df[column] = df[column].fillna(value)
@@ -197,12 +200,12 @@ def transform_features(
     numeric_columns = transformed.select_dtypes(include=["number"]).columns
     for column in numeric_columns:
         numeric = pd.to_numeric(transformed[column], errors="coerce")
-        if scaling == "standard" and numeric.std() not in (0, np.nan) and pd.notna(numeric.std()):
+        if scaling == "standard" and pd.notna(numeric.std()) and numeric.std() != 0:
             transformed[column] = (numeric - numeric.mean()) / numeric.std()
         elif scaling == "minmax" and numeric.max() != numeric.min():
             transformed[column] = (numeric - numeric.min()) / (numeric.max() - numeric.min())
         else:
-            transformed[column] = numeric.fillna(0)
+            transformed[column] = numeric
 
     categorical_columns = transformed.select_dtypes(include=["object", "string", "category"]).columns
     if encode_categoricals and len(categorical_columns):
@@ -245,7 +248,7 @@ def clean_dataset(
 
     date_columns = [column for column, details in schema.items() if details["semantic_type"] == "date"]
     for column in date_columns:
-        parsed = pd.to_datetime(df[column], errors="coerce")
+        parsed = pd.to_datetime(df[column], errors="coerce", format="mixed")
         df[column] = parsed.dt.strftime("%Y-%m-%d").astype("string")
 
     missing_before = {column: int(df[column].isna().sum()) for column in df.columns}

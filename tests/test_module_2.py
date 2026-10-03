@@ -23,7 +23,13 @@ def test_cleaning_writes_log_and_improves_quality_score(tmp_path):
     df.to_csv(input_file, index=False)
     profile = profile_dataset(input_file, tmp_path / "profile")
 
-    cleaned_path = clean_dataset(input_file, profile, tmp_path / "cleaned", fuzzy_threshold=0.85)
+    cleaned_path = clean_dataset(
+        input_file,
+        profile,
+        tmp_path / "cleaned",
+        fuzzy_threshold=0.85,
+        transformations={"scaling": "minmax", "encode_categoricals": True, "extract_date_features": True},
+    )
     cleaned = pd.read_csv(cleaned_path)
     log = json.loads((tmp_path / "cleaned" / "cleaning_log.json").read_text(encoding="utf-8"))
 
@@ -33,8 +39,11 @@ def test_cleaning_writes_log_and_improves_quality_score(tmp_path):
     assert cleaned.loc[0, "city"] == "new york"
     assert log["actions"]["exact_duplicates_removed"] == 1
     assert log["actions"]["fuzzy_duplicate_candidates"]
+    assert log["actions"]["normalization"]["date_formats"]["signup_date"]["invalid_values"] == 1
     assert log["schema_inference"]["amount"]["expected_range"] == {"min": 10.0, "max": 40.0}
     assert log["quality_score"]["after"]["overall"] > log["quality_score"]["before"]["overall"]
+    assert log["transformations"]["output_file"] == "transformed_features.csv"
+    assert (tmp_path / "cleaned" / "transformed_features.csv").exists()
 
 
 @pytest.mark.parametrize("strategy", ["knn", "regression", "iterative"])

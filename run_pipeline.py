@@ -37,7 +37,7 @@ def main() -> None:
     ensure_sample_data()
     OUTPUT_DIR.mkdir(exist_ok=True)
 
-    profiling_report = profile_dataset(INPUT_FILE)
+    profiling_report = profile_dataset(INPUT_FILE, OUTPUT_DIR / "profiling_visualizations")
     profiling_path = OUTPUT_DIR / "profiling_report.json"
     profiling_path.write_text(json.dumps(profiling_report, indent=2), encoding="utf-8")
 
