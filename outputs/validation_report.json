@@ -3,6 +3,156 @@
   "row_count": 7,
   "column_count": 9,
   "status": "pass",
-  "issues": [],
-  "passed_checks": true
+  "passed_checks": true,
+  "issues": [
+    "Column 'phone' has placeholder or fake-looking values (1 of 7 rows)"
+  ],
+  "scores": {
+    "error_severity": 2.86,
+    "anomaly_severity": 0.0,
+    "structural_penalty": 0.0,
+    "health_score": 98.29,
+    "pass_threshold": 80.0
+  },
+  "findings": [
+    {
+      "check": "suspicious_pattern",
+      "column": "phone",
+      "severity": "low",
+      "affected_rows": 1,
+      "affected_ratio": 0.1429,
+      "example_rows": [
+        4
+      ],
+      "message": "Column 'phone' has placeholder or fake-looking values (1 of 7 rows)",
+      "category": "ai_error"
+    }
+  ],
+  "column_classification": {
+    "customer_id": {
+      "predicted_class": "identifier",
+      "confidence": 0.9858,
+      "dominance": 1.0,
+      "expected_from_name": "identifier",
+      "status": "ok",
+      "top_classes": {
+        "identifier": 0.9858,
+        "date": 0.0049,
+        "numeric": 0.0037
+      }
+    },
+    "name": {
+      "predicted_class": "person_name",
+      "confidence": 0.9722,
+      "dominance": 1.0,
+      "expected_from_name": "person_name",
+      "status": "ok",
+      "top_classes": {
+        "person_name": 0.9722,
+        "text": 0.0206,
+        "date": 0.0017
+      }
+    },
+    "email": {
+      "predicted_class": "email",
+      "confidence": 0.9984,
+      "dominance": 1.0,
+      "expected_from_name": "email",
+      "status": "ok",
+      "top_classes": {
+        "email": 0.9984,
+        "text": 0.0007,
+        "person_name": 0.0004
+      }
+    },
+    "age": {
+      "predicted_class": "numeric",
+      "confidence": 0.9939,
+      "dominance": 1.0,
+      "expected_from_name": "numeric",
+      "status": "ok",
+      "top_classes": {
+        "numeric": 0.9939,
+        "phone": 0.002,
+        "postcode": 0.0013
+      }
+    },
+    "city": {
+      "predicted_class": "text",
+      "confidence": 0.9491,
+      "dominance": 1.0,
+      "expected_from_name": null,
+      "status": "ok",
+      "top_classes": {
+        "text": 0.9491,
+        "person_name": 0.0368,
+        "email": 0.0031
+      }
+    },
+    "signup_date": {
+      "predicted_class": "date",
+      "confidence": 0.9817,
+      "dominance": 1.0,
+      "expected_from_name": "date",
+      "status": "ok",
+      "top_classes": {
+        "date": 0.9817,
+        "postcode": 0.0073,
+        "phone": 0.0048
+      }
+    },
+    "amount_spent": {
+      "predicted_class": "numeric",
+      "confidence": 0.9824,
+      "dominance": 1.0,
+      "expected_from_name": "numeric",
+      "status": "ok",
+      "top_classes": {
+        "numeric": 0.9824,
+        "phone": 0.0126,
+        "postcode": 0.0019
+      }
+    },
+    "phone": {
+      "predicted_class": "phone",
+      "confidence": 0.9177,
+      "dominance": 1.0,
+      "expected_from_name": "phone",
+      "status": "ok",
+      "top_classes": {
+        "phone": 0.9177,
+        "postcode": 0.043,
+        "date": 0.0206
+      }
+    },
+    "notes": {
+      "predicted_class": "text",
+      "confidence": 0.9526,
+      "dominance": 1.0,
+      "expected_from_name": null,
+      "status": "ok",
+      "top_classes": {
+        "text": 0.9526,
+        "person_name": 0.0362,
+        "identifier": 0.004
+      }
+    }
+  },
+  "anomaly_detection": {
+    "status": "skipped",
+    "features": [
+      "age",
+      "amount_spent"
+    ],
+    "methods": {},
+    "reason": "fewer than 10 rows"
+  },
+  "drift": {
+    "status": "skipped",
+    "reason": "needs a reference dataset or at least 40 rows"
+  },
+  "evaluation": {
+    "status": "skipped",
+    "reason": "needs at least 30 rows and one numeric feature"
+  }
 }

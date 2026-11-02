@@ -3,6 +3,9 @@
   "cleaned_file": "cleaned_data.csv",
   "profiling_status": "completed",
   "validation_status": "pass",
-  "issues_found": [],
+  "validation_health_score": 98.29,
+  "issues_found": [
+    "Column 'phone' has placeholder or fake-looking values (1 of 7 rows)"
+  ],
   "pipeline_ready": true
 }

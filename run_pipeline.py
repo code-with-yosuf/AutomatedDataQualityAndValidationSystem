@@ -42,7 +42,7 @@ def main() -> None:
     profiling_path.write_text(json.dumps(profiling_report, indent=2), encoding="utf-8")
 
     cleaned_path = clean_dataset(INPUT_FILE, profiling_report, OUTPUT_DIR)
-    validation_report = validate_dataset(cleaned_path)
+    validation_report = validate_dataset(cleaned_path, profile=profiling_report, output_dir=OUTPUT_DIR / "validation_visualizations")
     validation_path = OUTPUT_DIR / "validation_report.json"
     validation_path.write_text(json.dumps(validation_report, indent=2), encoding="utf-8")
 
