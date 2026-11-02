@@ -1,17 +1,14 @@
 from __future__ import annotations
 
-import json
+import sys
 from pathlib import Path
 
-from module_1_profiling.profiler import profile_dataset
-from module_2_cleaning.cleaner import clean_dataset
-from module_3_validation.validator import validate_dataset
-from module_4_automation.orchestrator import run_automation
+from module_4_automation import load_config, run_pipeline
 
 
 ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
-OUTPUT_DIR = ROOT / "outputs"
+CONFIG_FILE = ROOT / "config" / "pipeline.yaml"
 INPUT_FILE = DATA_DIR / "sample_customer_data.csv"
 
 
@@ -33,28 +30,15 @@ C-1007,Grace Green,grace@example.com,28,Boston,not-a-date,88.10,555-777-7777,Ver
     INPUT_FILE.write_text(sample_data, encoding="utf-8")
 
 
-def main() -> None:
+def main() -> int:
     ensure_sample_data()
-    OUTPUT_DIR.mkdir(exist_ok=True)
+    result = run_pipeline(load_config(CONFIG_FILE, base_dir=ROOT))
 
-    profiling_report = profile_dataset(INPUT_FILE, OUTPUT_DIR / "profiling_visualizations")
-    profiling_path = OUTPUT_DIR / "profiling_report.json"
-    profiling_path.write_text(json.dumps(profiling_report, indent=2), encoding="utf-8")
-
-    cleaned_path = clean_dataset(INPUT_FILE, profiling_report, OUTPUT_DIR)
-    validation_report = validate_dataset(cleaned_path, profile=profiling_report, output_dir=OUTPUT_DIR / "validation_visualizations")
-    validation_path = OUTPUT_DIR / "validation_report.json"
-    validation_path.write_text(json.dumps(validation_report, indent=2), encoding="utf-8")
-
-    automation_summary = run_automation(INPUT_FILE, cleaned_path, profiling_report, validation_report, OUTPUT_DIR)
-    summary_path = OUTPUT_DIR / "end_to_end_pipeline_summary.json"
-    summary_path.write_text(json.dumps(automation_summary, indent=2), encoding="utf-8")
-
-    print(f"Profiling report: {profiling_path}")
-    print(f"Cleaned dataset: {cleaned_path}")
-    print(f"Validation report: {validation_path}")
-    print(f"Pipeline summary: {summary_path}")
+    for name, path in result.artifacts.items():
+        print(f"{name}: {path}")
+    print(f"Status: {result.status} (pipeline_ready={result.pipeline_ready})")
+    return 0 if result.status == "success" else 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

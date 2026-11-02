@@ -1,5 +1,11 @@
 {
+  "run_id": "20261102T155726Z-fa3d8b",
+  "status": "success",
+  "started_at": "2026-11-02T15:57:26+00:00",
+  "finished_at": "2026-11-02T15:57:33+00:00",
+  "duration_seconds": 6.566,
   "input_file": "sample_customer_data.csv",
+  "output_dir": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs",
   "cleaned_file": "cleaned_data.csv",
   "profiling_status": "completed",
   "validation_status": "pass",
@@ -7,5 +13,105 @@
   "issues_found": [
     "Column 'phone' has placeholder or fake-looking values (1 of 7 rows)"
   ],
-  "pipeline_ready": true
+  "pipeline_ready": true,
+  "stages": [
+    {
+      "name": "profiling",
+      "status": "success",
+      "duration_seconds": 1.145,
+      "outputs": {
+        "profiling_report": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\profiling_report.json",
+        "profiling_visualizations": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\profiling_visualizations"
+      },
+      "metrics": {
+        "rows": 8,
+        "columns": 9,
+        "suspicious_columns": [
+          "age",
+          "signup_date"
+        ],
+        "mixed_type_columns": [
+          "age",
+          "signup_date"
+        ],
+        "pii_columns": [
+          "name",
+          "email",
+          "phone"
+        ],
+        "null_percentage": 8.33
+      },
+      "error": null
+    },
+    {
+      "name": "cleaning",
+      "status": "success",
+      "duration_seconds": 0.032,
+      "outputs": {
+        "cleaned_data": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\cleaned_data.csv",
+        "cleaning_log": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\cleaning_log.json"
+      },
+      "metrics": {
+        "exact_duplicates_removed": 1,
+        "fuzzy_duplicate_candidates": 0,
+        "quality_before": 87.92,
+        "quality_after": 100.0,
+        "quality_delta": 12.08
+      },
+      "error": null
+    },
+    {
+      "name": "validation",
+      "status": "success",
+      "duration_seconds": 5.387,
+      "outputs": {
+        "validation_report": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\validation_report.json"
+      },
+      "metrics": {
+        "status": "pass",
+        "health_score": 98.29,
+        "error_severity": 2.86,
+        "anomaly_severity": 0.0,
+        "findings": 1,
+        "findings_by_severity": {
+          "high": 0,
+          "medium": 0,
+          "low": 1
+        }
+      },
+      "error": null
+    }
+  ],
+  "artifacts": {
+    "profiling_report": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\profiling_report.json",
+    "profiling_visualizations": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\profiling_visualizations",
+    "cleaned_data": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\cleaned_data.csv",
+    "cleaning_log": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\cleaning_log.json",
+    "validation_report": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\validation_report.json",
+    "log": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\pipeline.log",
+    "pipeline_summary": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs\\end_to_end_pipeline_summary.json"
+  },
+  "config": {
+    "input_path": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\data\\sample_customer_data.csv",
+    "output_dir": "D:\\Personal\\AutomatedDataQualityAndValidationSystem\\outputs",
+    "cleaning": {
+      "imputation_strategy": "median",
+      "fuzzy_threshold": 0.92,
+      "transformations": null
+    },
+    "validation": {
+      "pass_threshold": 80.0,
+      "contamination": "auto",
+      "seed": 42,
+      "reference": null,
+      "rules": {},
+      "fail_on_validation": false
+    },
+    "logging": {
+      "level": "INFO",
+      "file": "pipeline.log"
+    }
+  },
+  "error": null,
+  "schema_version": "1.0"
 }

@@ -1,0 +1,17 @@
+2026-11-02 21:27:26,697 | INFO    | dq_pipeline | Run 20261102T155726Z-fa3d8b started: input=D:\Personal\AutomatedDataQualityAndValidationSystem\data\sample_customer_data.csv output=D:\Personal\AutomatedDataQualityAndValidationSystem\outputs
+2026-11-02 21:27:26,697 | INFO    | dq_pipeline | Stage 'profiling' started
+2026-11-02 21:27:27,843 | WARNING | dq_pipeline | Suspicious columns: age, signup_date
+2026-11-02 21:27:27,843 | WARNING | dq_pipeline | Mixed-type columns: age, signup_date
+2026-11-02 21:27:27,843 | WARNING | dq_pipeline | Potential PII columns: name, email, phone
+2026-11-02 21:27:27,843 | WARNING | dq_pipeline | Input contains 1 duplicate row(s)
+2026-11-02 21:27:27,844 | INFO    | dq_pipeline | Stage 'profiling' finished in 1.15s
+2026-11-02 21:27:27,844 | INFO    | dq_pipeline | Stage 'cleaning' started
+2026-11-02 21:27:27,876 | INFO    | dq_pipeline | Quality score 87.92 -> 100.00 (+12.08)
+2026-11-02 21:27:27,876 | INFO    | dq_pipeline | Stage 'cleaning' finished in 0.03s
+2026-11-02 21:27:27,876 | INFO    | dq_pipeline | Stage 'validation' started
+2026-11-02 21:27:33,262 | INFO    | dq_pipeline | Validation anomaly detection skipped: fewer than 10 rows
+2026-11-02 21:27:33,263 | INFO    | dq_pipeline | Validation drift skipped: needs a reference dataset or at least 40 rows
+2026-11-02 21:27:33,263 | INFO    | dq_pipeline | Validation evaluation skipped: needs at least 30 rows and one numeric feature
+2026-11-02 21:27:33,263 | INFO    | dq_pipeline | Validation pass: health score 98.29 (threshold 80.00), 1 finding(s)
+2026-11-02 21:27:33,263 | INFO    | dq_pipeline | Stage 'validation' finished in 5.39s
+2026-11-02 21:27:33,263 | INFO    | dq_pipeline | Run 20261102T155726Z-fa3d8b success in 6.57s (pipeline_ready=True)

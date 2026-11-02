@@ -1,0 +1,30 @@
+# Relative paths resolve against the directory the pipeline is run from.
+input:
+  path: data/sample_customer_data.csv
+
+output:
+  dir: outputs
+
+cleaning:
+  # mean | median | most_frequent | constant | knn | regression | iterative
+  imputation_strategy: median
+  fuzzy_threshold: 0.92
+  # Writes transformed_features.csv when set, e.g.:
+  # transformations: {scaling: standard, encode_categoricals: true, extract_date_features: true}
+  transformations: null
+
+validation:
+  pass_threshold: 80
+  contamination: auto
+  seed: 42
+  # CSV used as the baseline for drift detection.
+  reference: null
+  # numeric_ranges: {age: [0, 120]} | allowed_values: {status: [active, inactive]} | postcode_countries: [us, uk, ca, in]
+  rules: {}
+  # When true, a failed validation marks the whole pipeline run as failed.
+  fail_on_validation: false
+
+logging:
+  level: INFO
+  # Relative to the output directory; null disables the log file.
+  file: pipeline.log
