@@ -13,6 +13,7 @@ def run_automation(input_file: str | Path, cleaned_path: str | Path, profiling_r
         "cleaned_file": str(Path(cleaned_path).name),
         "profiling_status": "completed" if profiling_report.get("row_count", 0) > 0 else "failed",
         "validation_status": validation_report.get("status", "unknown"),
+        "validation_health_score": validation_report.get("scores", {}).get("health_score"),
         "issues_found": validation_report.get("issues", []),
         "pipeline_ready": validation_report.get("status") == "pass",
     }
