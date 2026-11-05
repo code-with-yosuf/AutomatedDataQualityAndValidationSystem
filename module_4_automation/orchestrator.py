@@ -6,7 +6,9 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from time import perf_counter
-from typing import Any, Callable, Dict, List, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
+
+import yaml
 
 from module_1_profiling.profiler import profile_dataset
 from module_2_cleaning.cleaner import clean_dataset
@@ -157,11 +159,28 @@ def _execute(name: str, action: Callable[[], StageOutput], log: logging.Logger) 
     return StageResult(name, "success", duration, outputs, metrics)
 
 
+def _dvc_file(input_path: Path) -> Path:
+    return input_path.with_name(input_path.name + ".dvc")
+
+
+def input_data_version(input_path: Path) -> Optional[str]:
+    """Return the md5 DVC recorded for the input file, or None when it is not DVC-tracked."""
+    dvc_file = _dvc_file(input_path)
+    if not dvc_file.is_file():
+        return None
+    try:
+        outs = (yaml.safe_load(dvc_file.read_text(encoding="utf-8")) or {}).get("outs") or []
+        return next(str(out["md5"]) for out in outs if out.get("path") == input_path.name)
+    except (yaml.YAMLError, AttributeError, KeyError, StopIteration):
+        return None
+
+
 def _check_inputs(config: PipelineConfig) -> None:
     if config.input_path is None:
         raise ConfigError("No input dataset configured (set input.path)")
     if not config.input_path.is_file():
-        raise ConfigError(f"Input file not found: {config.input_path}")
+        hint = " (tracked by DVC: run 'dvc pull' or 'dvc checkout')" if _dvc_file(config.input_path).is_file() else ""
+        raise ConfigError(f"Input file not found: {config.input_path}{hint}")
     if config.validation.reference is not None and not config.validation.reference.is_file():
         raise ConfigError(f"Reference file not found: {config.validation.reference}")
 
@@ -183,9 +202,12 @@ def run_pipeline(config: PipelineConfig) -> PipelineResult:
     state: Dict[str, Any] = {}
     stages: List[StageResult] = []
     error = None
+    data_version = input_data_version(config.input_path)
 
     with pipeline_logging(config.logging.level, log_path) as log:
         log.info("Run %s started: input=%s output=%s", run_id, config.input_path, config.output_dir)
+        if data_version:
+            log.info("Input data version (DVC md5): %s", data_version)
 
         for name, action in STAGES:
             if error:
@@ -229,6 +251,7 @@ def run_pipeline(config: PipelineConfig) -> PipelineResult:
             artifacts=artifacts,
             config=jsonable(config),
             error=error,
+            input_data_version=data_version,
         )
         _write_json(config.output_dir / SUMMARY_FILE, result.to_dict())
         log.log(

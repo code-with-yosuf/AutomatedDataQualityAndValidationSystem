@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.1"
 
 
 @dataclass(frozen=True)
@@ -74,6 +74,7 @@ class PipelineResult:
     artifacts: Dict[str, str]
     config: Dict[str, Any]
     error: Optional[str] = None
+    input_data_version: Optional[str] = None  # md5 recorded in the input's DVC file, if tracked
     schema_version: str = SCHEMA_VERSION
 
     def to_dict(self) -> Dict[str, Any]:

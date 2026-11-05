@@ -9,7 +9,7 @@ This project implements an automated data-quality pipeline. Modules 1 and 2 prov
 
 ## Project structure
 
-- [run_pipeline.py](run_pipeline.py) – orchestrates the full pipeline
+- [pipeline.py](pipeline.py) – command-line entry point (`run_pipeline.py` is a thin alias)
 - [module_1_profiling/profiler.py](module_1_profiling/profiler.py) – profiles the dataset and detects metadata issues
 - [module_2_cleaning/cleaner.py](module_2_cleaning/cleaner.py) – cleans and standardizes the data
 - [module_3_validation/validator.py](module_3_validation/validator.py) – validates the cleaned dataset (rules, anomaly detection, column classifier, error detection, drift, scoring, evaluation)
@@ -79,7 +79,34 @@ validate_dataset(file_path, profile=None, output_dir=None, reference=None, rules
 
 ```bash
 python -m pip install -r requirements.txt
-python run_pipeline.py
+python pipeline.py --input data/sample_customer_data.csv --output results/
 ```
 
-This creates `profiling_report.json`, `cleaned_data.csv`, `cleaning_log.json`, `validation_report.json`, and the pipeline summary in `outputs/`. Module 1 also writes its heatmap and distribution PNG files under `outputs/profiling_visualizations/`, and Module 3 writes `roc_curves.png` under `outputs/validation_visualizations/` when the dataset is large enough to evaluate.
+All options are optional; without them the run uses [config/pipeline.yaml](config/pipeline.yaml). Logs go to stderr and `pipeline.log`; the result summary goes to stdout.
+
+| Option | Effect |
+|---|---|
+| `--input CSV`, `--output DIR` | override `input.path` and `output.dir` |
+| `--config YAML` | use another config file |
+| `--reference CSV` | baseline dataset for drift detection |
+| `--log-level LEVEL` | `DEBUG`, `INFO`, `WARNING` or `ERROR` |
+| `--fail-on-validation` | treat a failed validation as a failed run |
+
+Exit codes: `0` success, `1` pipeline failed, `2` configuration or input error.
+
+This creates `profiling_report.json`, `cleaned_data.csv`, `cleaning_log.json`, `validation_report.json`, `pipeline.log` and `end_to_end_pipeline_summary.json` in the output directory. Module 1 also writes its heatmap and distribution PNG files under `profiling_visualizations/`, and Module 3 writes `roc_curves.png` under `validation_visualizations/` when the dataset is large enough to evaluate.
+
+## Data versioning (DVC)
+
+Only input data is versioned. `data/sample_customer_data.csv` is tracked by DVC: git stores the small pointer `data/sample_customer_data.csv.dvc` and DVC stores the file itself. Generated results in `outputs/` are not versioned, and each run records the md5 of its input in `input_data_version` of the summary so results can be traced to a data version.
+
+DVC is development tooling, so it is not in `requirements.txt`; install it with `python -m pip install dvc`.
+
+```bash
+dvc add data/new_data.csv          # track a new or changed input file
+git add data/new_data.csv.dvc data/.gitignore
+dvc remote add -d storage <url>    # once; no remote is configured yet
+dvc push                           # upload data to the remote
+dvc pull                           # restore tracked data after a clone
+dvc status                         # compare the working copy with the tracked version
+```

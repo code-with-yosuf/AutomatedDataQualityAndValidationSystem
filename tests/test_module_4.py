@@ -125,7 +125,7 @@ def test_pipeline_run_writes_all_artifacts_and_summary(tmp_path):
         assert Path(result.artifacts[name]).is_file(), name
 
     summary = json.loads((tmp_path / "out" / "end_to_end_pipeline_summary.json").read_text(encoding="utf-8"))
-    assert summary["run_id"] == result.run_id and summary["schema_version"] == "1.0"
+    assert summary["run_id"] == result.run_id and summary["schema_version"] == "1.1"
     assert summary["config"]["cleaning"]["imputation_strategy"] == "median"
     assert summary["stages"][2]["metrics"]["health_score"] == result.validation_health_score
 
@@ -170,6 +170,31 @@ def test_log_file_can_be_disabled(tmp_path):
 
     assert "log" not in result.artifacts
     assert not (tmp_path / "out" / "pipeline.log").exists()
+
+
+def test_input_data_version_is_read_from_the_dvc_file(tmp_path):
+    data = tmp_path / "data.csv"
+    (tmp_path / "data.csv.dvc").write_text("outs:\n- md5: cf15\n  size: 1\n  path: data.csv\n", encoding="utf-8")
+
+    assert orchestrator.input_data_version(data) == "cf15"
+
+
+@pytest.mark.parametrize("content", [None, "outs: [unclosed", "outs: []", "outs:\n- md5: x\n  path: other.csv\n", "- not a mapping"])
+def test_input_data_version_is_none_when_untracked_or_unreadable(tmp_path, content):
+    if content is not None:
+        (tmp_path / "data.csv.dvc").write_text(content, encoding="utf-8")
+
+    assert orchestrator.input_data_version(tmp_path / "data.csv") is None
+
+
+def test_run_summary_records_input_data_version(tmp_path):
+    config = make_config(tmp_path)
+    (tmp_path / "data.csv.dvc").write_text("outs:\n- md5: 0123abcd\n  path: data.csv\n", encoding="utf-8")
+
+    result = run_pipeline(config)
+
+    summary = json.loads((tmp_path / "out" / "end_to_end_pipeline_summary.json").read_text(encoding="utf-8"))
+    assert result.input_data_version == summary["input_data_version"] == "0123abcd"
 
 
 def test_missing_input_or_reference_raises_config_error(tmp_path):
