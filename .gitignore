@@ -4,3 +4,4 @@ __pycache__/
 outputs/
 results/
 demo/
+profiling_visualizations/

@@ -10,10 +10,6 @@ LOG_FORMAT = "%(asctime)s | %(levelname)-7s | %(name)s | %(message)s"
 LEVELS = ("DEBUG", "INFO", "WARNING", "ERROR")
 
 
-def get_logger(name: Optional[str] = None) -> logging.Logger:
-    return logging.getLogger(f"{LOGGER_NAME}.{name}" if name else LOGGER_NAME)
-
-
 @contextmanager
 def pipeline_logging(level: str, log_path: Optional[Path]) -> Iterator[logging.Logger]:
     """Send pipeline logs to stderr and, optionally, a file; handlers are removed on exit."""

@@ -59,11 +59,6 @@ def column_roles(columns: List[Any], profile: Optional[Dict[str, Any]] = None) -
     }
 
 
-def to_float(value: Any, digits: int = 4) -> Optional[float]:
-    value = float(value)
-    return round(value, digits) if np.isfinite(value) else None
-
-
 def make_finding(
     check: str,
     column: Optional[Any],

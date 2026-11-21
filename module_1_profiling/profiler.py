@@ -23,14 +23,10 @@ def _clean_values(series: pd.Series) -> pd.Series:
 
 
 def _value_kind(value: Any) -> str:
-    if pd.isna(value):
-        return "missing"
     if isinstance(value, (int, float, np.number)) and not isinstance(value, bool):
         return "numeric"
 
     text = str(value).strip()
-    if not text:
-        return "missing"
     try:
         float(text.replace(",", ""))
         return "numeric"
@@ -97,12 +93,8 @@ def detect_missing_values(df: pd.DataFrame) -> Dict[str, int]:
 
 
 def detect_pii_columns(df: pd.DataFrame) -> List[str]:
-    pii_candidates: List[str] = []
-    for column in df.columns:
-        semantic_type = detect_semantic_types(df)[column]
-        if semantic_type in {"email", "phone", "name"}:
-            pii_candidates.append(column)
-    return pii_candidates
+    semantic_types = detect_semantic_types(df)
+    return [column for column in df.columns if semantic_types[column] in {"email", "phone", "name"}]
 
 
 def _column_profiles(df: pd.DataFrame, semantic_types: Dict[str, str]) -> Dict[str, Dict[str, Any]]:
@@ -161,7 +153,6 @@ def _check_rules(
 ) -> Dict[str, Any]:
     findings: List[Dict[str, Any]] = []
     suspicious_columns: List[str] = []
-    mixed_columns = set(detect_mixed_type_columns(df))
 
     for column, profile in column_profiles.items():
         if profile["missing_percentage"] >= 50:
@@ -169,9 +160,6 @@ def _check_rules(
             suspicious_columns.append(column)
         if profile["inconsistent_value_count"]:
             findings.append({"column": column, "rule": "mixed_or_inconsistent_types", "severity": "warning", "count": profile["inconsistent_value_count"]})
-            suspicious_columns.append(column)
-        if column in mixed_columns and not profile["inconsistent_value_count"]:
-            findings.append({"column": column, "rule": "mixed_types", "severity": "warning", "count": len(df[column].dropna())})
             suspicious_columns.append(column)
         if profile["unique_count"] == 1 and len(df) > 1:
             findings.append({"column": column, "rule": "constant_column", "severity": "warning", "count": len(df)})

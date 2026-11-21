@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import re
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
@@ -231,8 +230,7 @@ def clean_dataset(
     input_path = Path(file_path)
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    original = pd.read_csv(input_path)
-    df = original.copy()
+    df = pd.read_csv(input_path)
     semantic_types = _semantic_types(profile)
     before_score = _quality_score(df)
     schema = _schema_inference(df, profile)
@@ -257,8 +255,6 @@ def clean_dataset(
     for column in df.columns:
         missing_count = int(df[column].isna().sum())
         if not missing_count:
-            continue
-        if column in numeric_columns:
             continue
         if df[column].notna().any():
             mode = df[column].mode(dropna=True)
