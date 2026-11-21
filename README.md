@@ -100,7 +100,7 @@ This creates `profiling_report.json`, `cleaned_data.csv`, `cleaning_log.json`, `
 
 Only input data is versioned. `data/sample_customer_data.csv` is tracked by DVC: git stores the small pointer `data/sample_customer_data.csv.dvc` and DVC stores the file itself. Generated results in `outputs/` are not versioned, and each run records the md5 of its input in `input_data_version` of the summary so results can be traced to a data version.
 
-DVC is development tooling, so it is not in `requirements.txt`; install it with `python -m pip install dvc`.
+DVC is development tooling, so it is not in `requirements.txt`; it is installed with `python -m pip install -r requirements-dev.txt`.
 
 ```bash
 dvc add data/new_data.csv          # track a new or changed input file
@@ -110,3 +110,30 @@ dvc push                           # upload data to the remote
 dvc pull                           # restore tracked data after a clone
 dvc status                         # compare the working copy with the tracked version
 ```
+
+## Docker
+
+The image installs only `requirements.txt`, contains the pipeline code and default config but no data, and runs as a non-root user. Mount the dataset at `/data` and a writable folder at `/results`:
+
+```bash
+docker build -t dq-pipeline .
+docker run --rm -v "$PWD/data:/data:ro" -v "$PWD/results:/results" dq-pipeline --input /data/sample_customer_data.csv --output /results
+```
+
+Without arguments the container processes `/data/input.csv` into `/results`. Any CLI option from the table above can be appended, and the exit codes are the same. On Linux, add `--user "$(id -u):$(id -g)"` if `/results` is not writable for the image's user (uid 1000). The DVC-tracked sample file must be fetched first (`dvc pull`).
+
+Python code, tests, `data/` and `outputs/` are excluded from the image through `.dockerignore`; when you add a new top-level package, add a `COPY` line for it to the `Dockerfile` (a test fails if you forget).
+
+## Testing
+
+```bash
+python -m pip install -r requirements-dev.txt
+pytest                  # unit, CLI, integration and packaging tests (Docker tests excluded)
+pytest -m integration   # only the end-to-end tests on generated data
+pytest -m docker        # builds the image and runs it; skipped when no Docker daemon is running
+```
+
+- Unit tests per module: `test_module_1.py` to `test_module_4.py`; the CLI is covered by `test_cli.py`.
+- `test_integration.py` runs the whole pipeline on a generated dataset with known defects (duplicates, missing and mixed-type values, messy emails and dates, planted outliers) and checks that each module's output is consumed correctly by the next, that the summary matches the individual reports, that runs are reproducible, and that drift against a reference is flagged.
+- `test_packaging.py` checks that the `Dockerfile` copies every package, that `requirements.txt` covers every third-party import, and that the pipeline runs from a copy holding only the files the image contains.
+- `test_docker.py` verifies the built image itself.
