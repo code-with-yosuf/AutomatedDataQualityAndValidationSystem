@@ -93,6 +93,16 @@ def test_classifier_detects_mislabeled_column_and_off_type_values():
     assert off_type and off_type[0]["example_rows"] == [3]
 
 
+def test_classifier_treats_long_decimal_numbers_as_numeric_not_phone():
+    rng = np.random.default_rng(8)
+    df = pd.DataFrame({"amount": [repr(float(v)) for v in rng.normal(200, 30, 40)] + ["196.42000000000002"] * 5})
+
+    classification, findings = classify_columns(df, {"amount": "numeric_amount"})
+
+    assert classification["amount"]["predicted_class"] == "numeric"
+    assert not [f for f in findings if f["check"] == "semantic_inconsistency"]
+
+
 def test_classifier_accepts_correctly_named_columns():
     df = pd.DataFrame(
         {

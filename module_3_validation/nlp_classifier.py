@@ -115,6 +115,7 @@ def _numeric(r: random.Random) -> str:
     return r.choice([
         str(r.randint(0, 9999)), f"{r.uniform(0, 10000):.2f}", f"{r.uniform(-500, 500):.1f}", f"{r.randint(1000, 9999999):,}",
         f"${r.uniform(1, 5000):,.2f}", f"{r.randint(0, 100)}%", f"{r.uniform(0, 1):.4f}", f"{r.randint(18, 90)}.0", f"{r.uniform(0, 999):.3f}",
+        repr(r.uniform(0, 1000)), repr(r.uniform(0, 100)),
     ])
 
 
@@ -147,7 +148,8 @@ def get_classifier(seed: int = 7, per_class: int = 500) -> Pipeline:
             values.append(generate(rng))
             labels.append(label)
     model = Pipeline([
-        ("tfidf", TfidfVectorizer(analyzer="char", ngram_range=(1, 6), preprocessor=_with_shape, sublinear_tf=True)),
+        # min_df=2 drops n-grams seen once (mostly random digits), shrinking the model about 4x with the same predictions.
+        ("tfidf", TfidfVectorizer(analyzer="char", ngram_range=(1, 6), min_df=2, preprocessor=_with_shape, sublinear_tf=True)),
         ("classifier", LogisticRegression(C=10.0, max_iter=2000, random_state=seed)),
     ])
     return model.fit(values, labels)

@@ -46,6 +46,19 @@ def test_cleaning_writes_log_and_improves_quality_score(tmp_path):
     assert (tmp_path / "cleaned" / "transformed_features.csv").exists()
 
 
+def test_imputed_floats_are_written_without_floating_point_noise(tmp_path):
+    df = pd.DataFrame({"score": [100.1, 200.2, None, 300.3, 400.4, 500.5, 600.6], "visits": [1, 2, 3, 4, 5, 6, 7]})
+    input_file = tmp_path / "noise.csv"
+    df.to_csv(input_file, index=False)
+    profile = profile_dataset(input_file, tmp_path / "profile")
+
+    cleaned_path = clean_dataset(input_file, profile, tmp_path / "cleaned", imputation_strategy="mean")
+
+    written = pd.read_csv(cleaned_path, dtype=str)["score"]
+    assert written[2] == "350.35"
+    assert written.str.len().max() <= 8
+
+
 @pytest.mark.parametrize("strategy", ["knn", "regression", "iterative"])
 def test_ml_imputation_strategies_fill_missing_numeric_values(tmp_path, strategy):
     df = pd.DataFrame({"feature_x": [1, 2, None, 4, 5], "feature_y": [2, 4, 6, 8, 10]})

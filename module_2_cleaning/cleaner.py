@@ -268,6 +268,10 @@ def clean_dataset(
         df[column] = df[column].fillna(fill_value)
         categorical_imputations[column] = {"count": missing_count, "method": "most_frequent", "fallback": str(fill_value)}
 
+    # Imputed means and medians carry float noise such as 196.42000000000002.
+    float_columns = df.select_dtypes(include="float").columns
+    df[float_columns] = df[float_columns].round(10)
+
     transformed_path = None
     transform_options = transformations or {}
     if transform_options:
